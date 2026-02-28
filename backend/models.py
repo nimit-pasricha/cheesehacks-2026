@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, Boolean, Float
 from sqlalchemy.ext.declarative import declarative_base
-
-Base = declarative_base()
+from sqlalchemy.orm import relationship
+from database import Base
 
 class Post(Base):
     __tablename__ = "posts"
