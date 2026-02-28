@@ -13,3 +13,4 @@ class Post(Base):
     upvotes = Column(Integer, default=0)
     bid = Column(Float, default=0.0)
     is_completed = Column(Boolean, default=False)
+    owner = relationship("User", back_populates="posts")
