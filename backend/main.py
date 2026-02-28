@@ -27,3 +27,21 @@ def create_post(post: schemas.PostCreate, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(new_post)
     return new_post
+
+
+@app.post("/users/")
+def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
+    new_user = models.User(
+        username=user.username,
+        email=user.email,
+        password_hash=user.password  # later you should hash this
+    )
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
+    return new_user
+
+
+@app.get("/users/")
+def get_users(db: Session = Depends(get_db)):
+    return db.query(models.User).all()
