@@ -2,6 +2,7 @@ from fastapi import FastAPI, Depends
 from sqlalchemy.orm import Session
 import models, schemas
 from database import engine, SessionLocal, Base
+from typing import Optional
 
 # creates the actual table in your database file
 Base.metadata.create_all(bind=engine)
@@ -20,15 +21,14 @@ def get_db():
 
 @app.post("/posts/")
 def create_post(post_data: schemas.PostCreate, db: Session = Depends(get_db)):
-    # 1. Create the Post with ALL the fields from your model
     new_post = models.Post(
-        location=post_data.location, 
+        location=post_data.location,
         description=post_data.description,
-        image_url=post_data.image_url,   
-        bid=post_data.bid,               
-        is_completed=False,              
-        upvotes=0,                       
-        owner_id=post_data.owner_id      
+        image_url=post_data.image_url,
+        bid=post_data.bid,
+        is_completed=False,
+        upvotes=0,
+        owner_id=post_data.owner_id,
     )
 
     actual_tags = (
@@ -48,7 +48,7 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     new_user = models.User(
         username=user.username,
         email=user.email,
-        password_hash=user.password,  # later you should hash this
+        password_hash=user.password,
     )
     db.add(new_user)
     db.commit()
@@ -62,7 +62,17 @@ def get_users(db: Session = Depends(get_db)):
 
 
 @app.get("/posts/")
-def get_posts(db: Session = Depends(get_db), limit: int = 20):
-    posts = db.query(models.Post).limit(limit).all()
-    
-    return posts
+def get_posts(
+    user_id: Optional[int] = None,
+    tag_name: Optional[str] = None,
+    db: Session = Depends(get_db),
+):
+    query = db.query(models.Post)
+
+    if user_id:
+        query = query.filter(models.Post.owner_id == user_id)
+
+    if tag_name:
+        query = query.join(models.Post.tags).filter(models.Tag.name == tag_name)
+
+    return query.all()
