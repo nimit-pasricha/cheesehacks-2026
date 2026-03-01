@@ -1,25 +1,27 @@
-from typing import List
-
 from pydantic import BaseModel
+from typing import List, Optional
 
-# schemas.py
-class PostCreate(BaseModel):
-    location: str
-    description: str
-    image_url: str
-    bid: float
-    owner_id: int
-    tag_names: List[str]
-    # We don't include 'upvotes' or 'is_completed' here 
-    # because they should start at 0/False by default.
+
+# ── Auth ──────────────────────────────────────────────────────────────────────
 
 class UserCreate(BaseModel):
     username: str
     email: str
     password: str
 
-from pydantic import BaseModel
-from typing import List
+
+class UserLogin(BaseModel):
+    username: str
+    password: str
+
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+
+class TokenData(BaseModel):
+    user_id: Optional[int] = None
 
 
 class UserResponse(BaseModel):
@@ -31,6 +33,8 @@ class UserResponse(BaseModel):
         from_attributes = True
 
 
+# ── Tags ──────────────────────────────────────────────────────────────────────
+
 class TagResponse(BaseModel):
     id: int
     name: str
@@ -38,12 +42,26 @@ class TagResponse(BaseModel):
     class Config:
         from_attributes = True
 
-class PostResponse(BaseModel):
-    id: int
-    location: str
+
+# ── Reports ───────────────────────────────────────────────────────────────────
+
+class ReportCreate(BaseModel):
+    latitude: float
+    longitude: float
     description: str
-    image_url: str
+    image_url: Optional[str] = None
+    bid: float = 0.0
+    tag_names: List[str] = []
+
+
+class ReportResponse(BaseModel):
+    id: int
+    latitude: float
+    longitude: float
+    description: str
+    image_url: Optional[str]
     upvotes: int
+    interested_count: int
     bid: float
     is_completed: bool
     owner_id: int
