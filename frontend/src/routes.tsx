@@ -6,6 +6,7 @@ import HeaderLayout from "./layouts/HeaderLayout";
 import SignupPage from "./pages/SignupPage";
 import LoginPage from "./pages/LoginPage";
 import FocusLayout from "./layouts/FocusLayout";
+import ReportCreationPage from "./pages/ReportCreationPage";
 
 const router = createHashRouter([
   {
@@ -19,6 +20,10 @@ const router = createHashRouter([
       {
         path: "login",
         element: <LoginPage />,
+      },
+      {
+        path: "create-report",
+        element: <ReportCreationPage />,
       },
     ],
   },

@@ -5,17 +5,19 @@ import { Image } from "../components/Image";
 import { asCurrency } from "../utility";
 import { Button } from "../components/Button";
 import { LocationDisplay } from "../components/LocationManagement";
+import { reportsApi } from "../api/reports";
+import { useParams } from "react-router-dom";
 
 export default function ReportPage() {
   const [reportDetails, setReportDetails] = useState<ReportData | undefined>(
     undefined,
   );
+  const params = useParams();
   const isLoading = reportDetails === undefined;
 
   useEffect(() => {
-    setTimeout(() => {
-      setReportDetails(() => TestReportData);
-    }, 200);
+    const res = reportsApi.getReportInfo(params.reportId!);
+    setReportDetails(() => res);
   }, []);
 
   return (

@@ -1,7 +1,7 @@
 export default function ErrorPage() {
   return (
     <>
-      <div className="flex flex-col justify-center pl-5 w-screen h-screen bg-accent text-primary">
+      <div className="fixed inset-0 flex flex-col justify-center pl-5 w-full h-screen overflow-hidden bg-accent text-primary">
         <h1 className="text-3xl font-bold">
           {" "}
           Uh Oh! An Unexpected Error Occured!{" "}

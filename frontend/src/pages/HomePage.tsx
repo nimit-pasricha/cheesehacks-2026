@@ -1,12 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ReportCardPreview } from "../components/Cards";
 import { AllTags, TestReportPreviewData } from "../constants";
 import type { GeoLocation, PT_classname, ReportPreviewData } from "../types";
 import { jcn } from "../utility";
 import { NumberInput } from "../components/Input";
 import { LocationPicker } from "../components/LocationManagement";
+import { Button } from "../components/Button";
+import { useAuth } from "../hooks/contexts/authContext";
+import { apiClient } from "../api/core";
+import { reportsApi } from "../api/reports";
+import { useNavigate } from "react-router-dom";
 
-interface ReportFilters {
+export interface ReportFilters {
   tags: string[];
   minInterest?: number;
   maxInterest?: number;
@@ -125,17 +130,22 @@ export default function HomePage() {
   const [searchFilters, setSearchFilters] = useState<ReportFilters>({
     tags: [],
   });
-  const [reportPreviews, setReportPreviews] = useState<ReportPreviewData[]>([
-    TestReportPreviewData,
-    TestReportPreviewData,
-    TestReportPreviewData,
-  ]);
+  const auth = useAuth();
+
+  const [reportPreviews, setReportPreviews] = useState<ReportPreviewData[]>([]);
+
+  const navigation = useNavigate();
+
+  useEffect(() => {
+    const res = reportsApi.getReportPreviews(searchFilters);
+    setReportPreviews(() => res);
+  }, [searchFilters]);
 
   return (
     <>
-      {/* Main Content. Requests etc. */}
-      <div className="flex">
-        <div className="fixed w-1/4 px-8">
+      {/* Main Content. Requests, Filters etc. */}
+      <div className="flex justify-center">
+        <div className="fixed left-0 w-1/4 px-8">
           <FilterForm
             filters={searchFilters}
             onChange={(n) => {
@@ -145,8 +155,6 @@ export default function HomePage() {
             availableTags={AllTags}
           />
         </div>
-
-        <div className="w-1/4"> {/* Spacer */} </div>
 
         <ul className="w-1/2 flex flex-col gap-16">
           {reportPreviews.map((p) => (
@@ -164,6 +172,16 @@ export default function HomePage() {
             </li>
           ))}
         </ul>
+        <div className="flex fixed right-0 h-full w-1/4 px-8">
+          {auth.loggedIn && (
+            <Button
+              onClick={() => navigation("/create-report")}
+              className="h-12 w-full"
+            >
+              Create Report
+            </Button>
+          )}
+        </div>
       </div>
     </>
   );
