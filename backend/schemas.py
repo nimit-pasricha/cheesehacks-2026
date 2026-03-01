@@ -26,7 +26,28 @@ class UserResponse(BaseModel):
     id: int
     username: str
     email: str
-    # We leave out 'password' here for safety!
 
     class Config:
-        from_attributes = True # This tells Pydantic to play nice with SQLAlchemy
+        from_attributes = True
+
+
+class TagResponse(BaseModel):
+    id: int
+    name: str
+
+    class Config:
+        from_attributes = True
+
+class PostResponse(BaseModel):
+    id: int
+    location: str
+    description: str
+    image_url: str
+    upvotes: int
+    bid: float
+    is_completed: bool
+    owner_id: int
+    tags: List[TagResponse]
+
+    class Config:
+        from_attributes = True

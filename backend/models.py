@@ -16,9 +16,8 @@ class User(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     posts = relationship("Post", back_populates="owner")
 
-
-def __repr__(self):
-    return f"<User(id={self.id}, username='{self.username}', email='{self.email}')>"
+    def __repr__(self):
+        return f"<User(id={self.id}, username='{self.username}', email='{self.email}')>"
 
 
 post_tags = Table(
@@ -41,7 +40,7 @@ class Post(Base):
     is_completed = Column(Boolean, default=False)
     owner_id = Column(Integer, ForeignKey("users.id"))
     owner = relationship("User", back_populates="posts")
-    tags = relationship("Tag", secondary=post_tags)
+    tags = relationship("Tag", secondary=post_tags, back_populates="posts")
 
 
 class Tag(Base):

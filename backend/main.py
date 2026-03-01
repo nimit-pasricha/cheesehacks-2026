@@ -1,16 +1,48 @@
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI, Depends
 from sqlalchemy.orm import Session
 import models, schemas
 from database import engine, SessionLocal, Base
 from typing import Optional
 
-# creates the actual table in your database file
 Base.metadata.create_all(bind=engine)
+
+from sqlalchemy.orm import Session
+from database import SessionLocal, engine
+import models
 
 app = FastAPI()
 
+# This list defines your "Fixed" set of tags
+SUSTAINABILITY_TAGS = ["Trash", "Graffiti", "Homeless", "Misc", "Stray Animals"]
 
-# Dependency to get a database connection
+
+@app.on_event("startup")
+def startup_populate_tags():
+    # 1. Open a temporary connection to the database
+    db = SessionLocal()
+    try:
+        for tag_name in SUSTAINABILITY_TAGS:
+            # 2. Check if this tag name already exists in the 'tags' table
+            existing_tag = (
+                db.query(models.Tag).filter(models.Tag.name == tag_name).first()
+            )
+
+            # 3. If it's NOT there, create it!
+            if not existing_tag:
+                new_tag = models.Tag(name=tag_name)
+                db.add(new_tag)
+
+        # 4. Save the changes
+        db.commit()
+        print("Fixed tags have been autopopulated!")
+    except Exception as e:
+        print(f"Error autopopulating tags: {e}")
+    finally:
+        db.close()
+
+
 def get_db():
     db = SessionLocal()
     try:
@@ -19,23 +51,22 @@ def get_db():
         db.close()
 
 
-@app.post("/posts/")
+@app.post("/posts/", response_model=schemas.PostResponse)
 def create_post(post_data: schemas.PostCreate, db: Session = Depends(get_db)):
+    # 1. Create Post
     new_post = models.Post(
         location=post_data.location,
         description=post_data.description,
         image_url=post_data.image_url,
         bid=post_data.bid,
-        is_completed=False,
-        upvotes=0,
         owner_id=post_data.owner_id,
     )
 
-    actual_tags = (
-        db.query(models.Tag).filter(models.Tag.name.in_(post_data.tag_names)).all()
-    )
-
-    new_post.tags = actual_tags
+    if post_data.tag_names:
+        db_tags = (
+            db.query(models.Tag).filter(models.Tag.name.in_(post_data.tag_names)).all()
+        )
+        new_post.tags = db_tags
 
     db.add(new_post)
     db.commit()
