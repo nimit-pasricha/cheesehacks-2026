@@ -3,9 +3,10 @@ import { createRoot } from "react-dom/client";
 import "./styles/index.css";
 import { RouterProvider } from "react-router-dom";
 import router from "./routes.tsx";
+import "leaflet/dist/leaflet.css";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <RouterProvider router={router} />,
   </StrictMode>,
 );

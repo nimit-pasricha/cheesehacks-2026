@@ -15,7 +15,7 @@ export function Header(props: {} & PT_classname) {
         <Logo />
       </NavLink>
       <nav className="">
-        <NavLink to={"/"} className="underline">
+        <NavLink to={"/signup"} className="underline">
           Sign up
         </NavLink>
       </nav>

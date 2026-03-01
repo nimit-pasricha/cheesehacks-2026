@@ -19,5 +19,7 @@ export const TestReportPreviewData: ReportPreviewData = {
 export const TestReportData: ReportData = {
   ...TestReportPreviewData,
   description:
-    "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ad, facere cumque. Quam, voluptatem consequuntur, ipsam quos molestias similique iste soluta aperiam facilis ut consequatur deleniti voluptatum placeat rerum aspernatur consectetur.",
+    "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ad, facere cumque. Quam, voluptatem consequuntur, ipsam quos molestias similique iste soluta aperiam facilis ut consequatur deleniti voluptatum placeat rerum aspernatur consectetur.\nLorem ipsum, dolor sit amet consectetur adipisicing elit. Ad, facere cumque. Quam, voluptatem consequuntur, ipsam quos molestias similique iste soluta aperiam facilis ut consequatur deleniti voluptatum placeat rerum aspernatur consectetur.",
 };
+
+export const AllTags = ["Misc.", "Littering", "Homeless", "Stray Animals"];

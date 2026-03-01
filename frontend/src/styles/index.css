@@ -1,8 +1,9 @@
 @import "tailwindcss";
+/* @import "tailwindcss/preflight"; */
 
 @theme {
   /* Defaults */
-  --color-*: initial;
+  /* --color-*: initial; */
 
   /* Core */
   --color-primary: #ffedd7;
@@ -43,4 +44,8 @@
   --color-accent-700: "#99403c";
   --color-accent-800: "#662b28";
   --color-accent-900: "#331514";
+}
+
+#root {
+  background-color: var(--color-primary);
 }

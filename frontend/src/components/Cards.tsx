@@ -21,6 +21,7 @@ export function CardPlaceholder(props: {} & PT_classname & PT_children) {
 export function ReportCardPreview(
   props: {
     preview: ReportPreviewData;
+    onSelectTag?: (tg: string) => void;
   } & PT_classname,
 ) {
   const nav = useNavigate();
@@ -28,13 +29,13 @@ export function ReportCardPreview(
   return (
     <>
       <div
+        onClick={() => {
+          nav(`/report/${props.preview.id}`);
+        }}
         className={jcn(
           "flex flex-col rounded w-full bg-secondary text-primary px-4 pt-4 pb-4 cursor-pointer",
           props.className,
         )}
-        onClick={() => {
-          nav(`/report/${props.preview.id}`);
-        }}
       >
         <span className="flex justify-between text-lg font-bold">
           {props.preview.funding > 0 && (
@@ -45,14 +46,25 @@ export function ReportCardPreview(
           )}
         </span>
 
-        <span className="mt-1">
+        <span className="mt-1" onClick={(e) => e.stopPropagation()}>
           Location: <a href={locationUrl}>{locationUrl}</a>
         </span>
 
         <ul className="flex gap-2 mt-2">
           {props.preview.tags.map((tg) => (
             <li key={tg}>
-              <span className="bg-accent rounded-full px-2 pb-1">{tg}</span>
+              <span
+                onClick={(e) => {
+                  e.stopPropagation(); // Prevent body click detection
+                  console.log("Pretag", tg);
+                  if (props.onSelectTag !== undefined) {
+                    props.onSelectTag(tg);
+                  }
+                }}
+                className="bg-accent rounded-full px-2 pb-1"
+              >
+                {tg}
+              </span>
             </li>
           ))}
         </ul>

@@ -3,6 +3,8 @@ import type { ReportData } from "../types";
 import { TestReportData } from "../constants";
 import { Image } from "../components/Image";
 import { asCurrency } from "../utility";
+import { Button } from "../components/Button";
+import { LocationDisplay } from "../components/LocationManagement";
 
 export default function ReportPage() {
   const [reportDetails, setReportDetails] = useState<ReportData | undefined>(
@@ -34,7 +36,19 @@ export default function ReportPage() {
                 <span>{reportDetails.interest}</span>
               </span>
             </div>
-            <p className="text-lg">{reportDetails.description}</p>
+            <div className="flex flex-col gap-4">
+              {reportDetails.description.split(RegExp("\n+")).map((p, i) => (
+                <p key={i} className="text-lg">
+                  {p}
+                </p>
+              ))}
+            </div>
+
+            <Button>Contribute</Button>
+
+            <div className="w-full h-100 mt-4 rounded-lg overflow-hidden border">
+              <LocationDisplay location={reportDetails.location} />
+            </div>
           </>
         )}
       </div>

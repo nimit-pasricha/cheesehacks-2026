@@ -9,7 +9,7 @@ export default function HeaderLayout() {
         <Header />
         <span className="py-12" />
         <Outlet />
-        <span className="py-12" />
+        <span className="py-6" />
       </div>
     </>
   );

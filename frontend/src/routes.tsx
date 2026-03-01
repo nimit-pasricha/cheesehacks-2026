@@ -3,8 +3,25 @@ import HomePage from "./pages/HomePage";
 import ErrorPage from "./pages/ErrorPage";
 import ReportPage from "./pages/ReportPage";
 import HeaderLayout from "./layouts/HeaderLayout";
+import SignupPage from "./pages/SignupPage";
+import LoginPage from "./pages/LoginPage";
+import FocusLayout from "./layouts/FocusLayout";
 
 const router = createHashRouter([
+  {
+    element: <FocusLayout />,
+    errorElement: <ErrorPage />,
+    children: [
+      {
+        path: "signup",
+        element: <SignupPage />,
+      },
+      {
+        path: "login",
+        element: <LoginPage />,
+      },
+    ],
+  },
   {
     path: "/",
     Component: HeaderLayout,
@@ -12,13 +29,11 @@ const router = createHashRouter([
     children: [
       {
         index: true,
-        Component: HomePage,
-        errorElement: <ErrorPage />,
+        element: <HomePage />,
       },
       {
         path: "report/:reportId",
-        Component: ReportPage,
-        errorElement: <ErrorPage />,
+        element: <ReportPage />,
       },
     ],
   },
