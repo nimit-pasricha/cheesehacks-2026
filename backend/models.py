@@ -1,8 +1,6 @@
 from sqlalchemy import Column, Integer, String, Boolean, Float, ForeignKey, Table
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from database import Base
-from datetime import datetime
 from sqlalchemy import DateTime, func
 
 
@@ -14,40 +12,41 @@ class User(Base):
     email = Column(String, unique=True, nullable=False)
     password_hash = Column(String, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
-    posts = relationship("Post", back_populates="owner")
+    reports = relationship("Report", back_populates="owner")
 
     def __repr__(self):
         return f"<User(id={self.id}, username='{self.username}', email='{self.email}')>"
 
 
-post_tags = Table(
-    "post_tags",
+report_tags = Table(
+    "report_tags",
     Base.metadata,
-    Column("post_id", Integer, ForeignKey("posts.id"), primary_key=True),
+    Column("report_id", Integer, ForeignKey("reports.id"), primary_key=True),
     Column("tag_id", Integer, ForeignKey("tags.id"), primary_key=True),
 )
 
 
-class Post(Base):
-    __tablename__ = "posts"
+class Report(Base):
+    __tablename__ = "reports"
 
     id = Column(Integer, primary_key=True, index=True)
-    location = Column(String)
-    image_url = Column(String)
+    latitude = Column(Float, nullable=False)
+    longitude = Column(Float, nullable=False)
+    image_url = Column(String, nullable=True)
     description = Column(String)
     upvotes = Column(Integer, default=0)
+    interested_count = Column(Integer, default=0)
     bid = Column(Float, default=0.0)
     is_completed = Column(Boolean, default=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
     owner_id = Column(Integer, ForeignKey("users.id"))
-    owner = relationship("User", back_populates="posts")
-    tags = relationship("Tag", secondary=post_tags, back_populates="posts")
+    owner = relationship("User", back_populates="reports")
+    tags = relationship("Tag", secondary=report_tags, back_populates="reports")
 
 
 class Tag(Base):
     __tablename__ = "tags"
+
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, unique=True)
-    posts = relationship("Post", secondary=post_tags, back_populates="tags")
-
-
-# Litter, Homeless, Stray animals, Misc
+    name = Column(String, unique=True, nullable=False)
+    reports = relationship("Report", secondary=report_tags, back_populates="tags")
