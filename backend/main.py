@@ -14,7 +14,6 @@ import models
 
 app = FastAPI()
 
-# This list defines your "Fixed" set of tags
 SUSTAINABILITY_TAGS = ["Trash", "Graffiti", "Homeless", "Misc", "Stray Animals"]
 
 
@@ -27,12 +26,10 @@ def startup_populate_tags():
                 db.query(models.Tag).filter(models.Tag.name == tag_name).first()
             )
 
-            # 3. If it's NOT there, create it!
             if not existing_tag:
                 new_tag = models.Tag(name=tag_name)
                 db.add(new_tag)
 
-        # 4. Save the changes
         db.commit()
         print("Fixed tags have been autopopulated!")
     except Exception as e:
