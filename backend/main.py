@@ -20,11 +20,9 @@ SUSTAINABILITY_TAGS = ["Trash", "Graffiti", "Homeless", "Misc", "Stray Animals"]
 
 @app.on_event("startup")
 def startup_populate_tags():
-    # 1. Open a temporary connection to the database
     db = SessionLocal()
     try:
         for tag_name in SUSTAINABILITY_TAGS:
-            # 2. Check if this tag name already exists in the 'tags' table
             existing_tag = (
                 db.query(models.Tag).filter(models.Tag.name == tag_name).first()
             )
