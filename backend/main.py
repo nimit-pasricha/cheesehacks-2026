@@ -127,7 +127,7 @@ def get_db():
 # ── Auth endpoints ────────────────────────────────────────────────────────────
 
 
-@app.post("/auth/signup", response_model=schemas.UserResponse, status_code=201)
+@app.post("/auth/signup", response_model=schemas.Token, status_code=201)
 def signup(user_data: schemas.UserCreate, db: Session = Depends(get_db)):
     if db.query(models.User).filter(models.User.username == user_data.username).first():
         raise HTTPException(status_code=400, detail="Username already taken")
@@ -142,7 +142,7 @@ def signup(user_data: schemas.UserCreate, db: Session = Depends(get_db)):
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
-    return new_user
+    return {"access_token": create_access_token(new_user.id), "token_type": "bearer"}
 
 
 @app.post("/auth/login", response_model=schemas.Token)
