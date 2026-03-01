@@ -1,16 +1,20 @@
 import { apiClient } from "./core";
 import type { GeoLocation, ReportData, ReportPreviewData } from "../types";
-import { TestReportData, TestReportPreviewData } from "../constants";
+import {
+  TestReportDatas,
+  TestReportPreviewData,
+  TestReportPreviewDataPlural,
+} from "../constants";
 import type { ReportFilters } from "../pages/HomePage";
 
 export const reportsApi = {
   getReportPreviews: (filters?: ReportFilters): ReportPreviewData[] => {
-    apiClient.get("", {});
-    return [TestReportPreviewData];
+    apiClient.get("/reports/");
+    return TestReportPreviewDataPlural;
   },
   getReportInfo: (id: string): ReportData => {
     apiClient.get("");
-    return TestReportData;
+    return TestReportDatas.filter((t) => `${t.id}` === id)[0];
   },
   createReport: (
     location: GeoLocation,

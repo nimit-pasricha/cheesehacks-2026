@@ -4,7 +4,7 @@ import type { PT_children } from "../../types";
 interface AuthContextType {
   loggedIn: boolean;
   username?: string;
-  login: (username: string) => void;
+  login: () => void;
   logout: () => void;
 }
 
@@ -12,20 +12,17 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider(props: {} & PT_children) {
   const [loggedIn, setLoggedIn] = useState(false);
-  const [username, setUsername] = useState<string | undefined>();
 
-  const login = (username: string) => {
-    setUsername(username);
+  const login = () => {
     setLoggedIn(true);
   };
 
   const logout = () => {
-    setUsername(undefined);
     setLoggedIn(false);
   };
 
   return (
-    <AuthContext.Provider value={{ loggedIn, username, login, logout }}>
+    <AuthContext.Provider value={{ loggedIn, login, logout }}>
       {props.children}
     </AuthContext.Provider>
   );

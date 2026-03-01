@@ -3,7 +3,7 @@ export interface ApiError {
   status: number;
 }
 
-const BASE_URL = "http://localhost:8080"; // replace later
+const BASE_URL = "http://localhost:8000"; // replace later
 
 async function request<T>(
   endpoint: string,
@@ -29,6 +29,16 @@ async function request<T>(
 }
 
 export const apiClient = {
+  request: async (
+    endpoint: string,
+    body?: unknown,
+    options: RequestInit = {},
+  ) => {
+    request(endpoint, {
+      body: JSON.stringify(body),
+      ...options,
+    });
+  },
   get: <T>(endpoint: string, body?: unknown) =>
     request<T>(endpoint, {
       method: "GET",
